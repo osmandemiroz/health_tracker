@@ -117,46 +117,37 @@ For comprehensive documentation, see the PRD document: [HEALTH_TRACKER_PRD.md](.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 👊🏻 Proje Hakkında:
 
-Son zamanlarda Flutter kullanarak bir kalori ve beslenme takip uygulaması geliştirdik! 📱💡  
-Ekip olarak çalıştık ve kullanıcıların günlük öğünlerini ekleyerek kalori ve makro besin değerlerini takip etmelerini sağladık.
 
-## 🙏🏻 Ekip:
 
-- **Mobil Geliştirici**: [@FarukBiberoglu](https://github.com/FarukBiberoglu)
-- **Full Stack Geliştirici**: [@ANILSRGT](https://github.com/ANILSRGT)
+## 🛠 Backend Integration:
 
-## 📹 Video Tanıtım:
+In this project, we developed a backend running on localhost using Node.js and Express! 🖥️📡 
+Thus, managing data has become more scalable and flexible.
+## 🔥 FatSecret API Integration:
 
-https://github.com/user-attachments/assets/c9f1b21d-a4fe-4215-82b5-d19c8955603a
+Users can instantly pull nutritional values without having to enter food information manually! 🛒✨## 🔥 FatSecret API Integration:
 
-## 🛠 Backend Entegrasyonu:
+Users can instantly pull nutritional values without having to enter food information manually! 🛒✨
 
-Bu projede Node.js ve Express kullanarak localhost üzerinde çalışan bir backend geliştirdik! 🖥️📡  
-Böylece verileri yönetmek daha ölçeklenebilir ve esnek hale geldi.
-
-## 🔥 FatSecret API Entegrasyonu:
-
-Kullanıcılar yiyecek bilgilerini manuel girmek zorunda kalmadan anlık olarak besin değerlerini çekebiliyor! 🛒✨
-
-## 🏗 Kullandığımız Teknolojiler:
+## 🏗 Technologies we use:
 
 - ✅ **Flutter** (UI & State Management)
 - ✅ **Provider**, **MobX** (State Management)
-- ✅ **Hive** (Lokal Veritabanı)
-- ✅ **Dependency Injection** (Modüler Yapı)
+- ✅ **Hive** (Local Database)
+- ✅ **Dependency Injection** (Modular Structure)
 - ✅ **Node.js & Express** (Backend API)
-- ✅ **FatSecret API** (Besin Verileri)
+- ✅ **FatSecret API** (Feed Data)
+- ✅ **Git & GitHub**## 🏗 Technologies we use:
+
+- ✅ **Flutter** (UI & State Management)
+- ✅ **Provider**, **MobX** (State Management)
+- ✅ **Hive** (Local Database)
+- ✅ **Dependency Injection** (Modular Structure)
+- ✅ **Node.js & Express** (Backend API)
+- ✅ **FatSecret API** (Feed Data)
 - ✅ **Git & GitHub**
 
-## 📌 Öne Çıkan Özellikler:
-
-- 🔹 **Food Sekmesi**: Kullanıcılar öğün ekleyerek besin değerlerini takip edebilir.
-- 🔹 **Recipe Sayfası**: Tarif önerileri sunar.
-- 🔹 **Grafik Raporları**: Haftalık kalori analizleri sağlar.
-- 🔹 **Home Sayfası**: Günlük kalori alımını görselleştirir.
-- 🔹 **Favoriler Sayfası**: Kullanıcılar favori tariflerini ve öğünlerini kaydedebilir.
 
 ---
 
