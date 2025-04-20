@@ -113,7 +113,7 @@ class _RecipesPageState extends State<RecipesPage> {
                                 crossAxisCount: context.ext.screen.width ~/ 200,
                                 crossAxisSpacing: 8,
                                 mainAxisSpacing: 10,
-                                childAspectRatio: 0.78,
+                                childAspectRatio: 1.5,
                               ),
                           itemCount: items.length,
                           itemBuilder: (context, index) {

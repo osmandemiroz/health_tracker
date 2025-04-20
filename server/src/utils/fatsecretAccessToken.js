@@ -15,6 +15,13 @@ async function getAccessToken(scope = "basic") {
             throw new Error("Missing API credentials");
         }
 
+        // Validate scope
+        const validScopes = ["basic", "premier", "vision"];
+        if (!validScopes.includes(scope)) {
+            console.error("[getAccessToken] Invalid scope requested:", scope);
+            throw new Error(`Invalid scope. Must be one of: ${validScopes.join(", ")}`);
+        }
+
         const response = await axios.post(
             TOKEN_URL,
             qs.stringify({
@@ -36,16 +43,15 @@ async function getAccessToken(scope = "basic") {
             throw new Error("No access token received");
         }
 
-        const accessToken = response.data.access_token;
-        console.log("[getAccessToken] Successfully obtained access token");
-        return accessToken;
+        console.log(`[getAccessToken] Successfully obtained access token for scope: ${scope}`);
+        return response.data.access_token;
     } catch (error) {
         console.error("[getAccessToken] Error getting access token:", error.message);
         if (error.response) {
             console.error("[getAccessToken] Error response data:", error.response.data);
             console.error("[getAccessToken] Error response status:", error.response.status);
         }
-        return null;
+        throw error;
     }
 }
 

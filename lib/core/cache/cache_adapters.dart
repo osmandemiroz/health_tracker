@@ -21,9 +21,6 @@ class _CacheAdapters {
       ..registerAdapter(RecipeNutritionModelAdapter())
       ..registerAdapter(RecipeSearchModelAdapter())
       ..registerAdapter(FoodCacheModelAdapter())
-      ..registerAdapter(PlannedMealsEnumAdapter())
-      ..registerAdapter(UserModelAdapter())
-      ..registerAdapter(GoalModelAdapter())
-      ..registerAdapter(MealPlanModelAdapter());
+      ..registerAdapter(PlannedMealsEnumAdapter());
   }
 }
