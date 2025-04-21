@@ -26,5 +26,5 @@ app.use("/api/v1/recipes", fatsecretRecipesRouter);
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
