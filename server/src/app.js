@@ -2,7 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const recipeRoutes = require("./src/routes/recipeRoutes");
+const recipeRoutes = require("./routes/recipe.routes");
 const userRoutes = require("./src/routes/userRoutes");
 const goalRoutes = require("./src/routes/goalRoutes");
 const progressRoutes = require("./src/routes/progressRoutes");
@@ -24,5 +24,5 @@ app.use("/api", alignsWithRoutes);
 app.use("/api/creates-saves", createsSavesRoutes);
 app.use("/api/manages", managesRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
