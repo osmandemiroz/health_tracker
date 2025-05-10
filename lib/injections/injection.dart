@@ -1,21 +1,55 @@
-import 'package:calory_tool/core/configs/constants/app_environments.dart';
+import 'package:calory_tool/core/configs/app_environments.dart';
 import 'package:calory_tool/data/datasources/fatsecret/fatsecret_remote_datasource.dart';
+import 'package:calory_tool/data/datasources/food_remote_datasource.dart';
 import 'package:calory_tool/data/repositories/fatsecret_api_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-part 'fatsecret_api_injection_mixin.dart';
-
-final class Injection with FatsecretApiInjectionMixin {
+final class Injection {
   Injection._init();
   static final Injection _instance = Injection._init();
   static Injection get I => _instance;
 
-  final _sl = GetIt.instance;
+  final _getIt = GetIt.instance;
 
   void init() {
-    fatsecretApiInjection(_sl);
+    _injectFoodApi();
+    _injectFatsecretApi();
   }
 
-  T read<T extends Object>() => _sl.get<T>();
+  void _injectFoodApi() {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: AppEnvironments.serverApiUrl,
+        headers: <String, dynamic>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    _getIt.registerLazySingleton<FoodRemoteDataSource>(
+      () => FoodRemoteDataSource(dio: dio),
+    );
+  }
+
+  void _injectFatsecretApi() {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: AppEnvironments.fatsecretApiUrl,
+        headers: <String, dynamic>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    _getIt.registerLazySingleton<FatsecretRemoteDatasource>(
+      () => FatsecretRemoteDatasource(fatsecretDio: dio),
+    );
+
+    _getIt.registerLazySingleton<FatsecretApiRepo>(FatsecretApiRepo.new);
+  }
+
+  T read<T extends Object>() => _getIt.get<T>();
 }

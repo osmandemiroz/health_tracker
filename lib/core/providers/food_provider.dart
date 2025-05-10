@@ -1,9 +1,9 @@
 import 'package:calory_tool/core/cache/cache_manager.dart';
 import 'package:calory_tool/core/models/food_cache_model.dart';
+import 'package:calory_tool/data/datasources/food_remote_datasource.dart';
 import 'package:calory_tool/data/models/foods/food_model.dart';
 import 'package:calory_tool/data/models/foods/food_search_model.dart';
-import 'package:calory_tool/data/params/fatsecret_api_search_food_params.dart';
-import 'package:calory_tool/data/repositories/fatsecret_api_repo.dart';
+import 'package:calory_tool/data/params/food_search_params.dart';
 import 'package:calory_tool/enum/planned_meals_enum.dart';
 import 'package:calory_tool/injections/injection.dart';
 import 'package:flutter/material.dart';
@@ -32,22 +32,37 @@ final class FoodProvider extends ChangeNotifier {
   }
 
   Future<void> fetchsearchfoods(String query) async {
+    print('[FoodProvider.fetchsearchfoods] Searching for: $query');
+
     isLoading = true;
     notifyListeners();
-    final res = await Injection.I.read<FatsecretApiRepo>().searchFood(
-      FatsecretApiSearchFoodParams(query: query),
-    );
-    res.when(
-      onSuccess: (data) {
-        foods = data;
-      },
-      onFail: (fail) {
-        showToast(fail.error.message);
-      },
-    );
-    isLoading = false;
 
-    notifyListeners();
+    try {
+      final res = await Injection.I.read<FoodRemoteDataSource>().searchFood(
+        FoodSearchParams(query: query),
+      );
+
+      res.when(
+        onSuccess: (data) {
+          foods = data;
+          print(
+            '[FoodProvider.fetchsearchfoods] Search successful. Found ${data.foods.length} results',
+          );
+        },
+        onFail: (fail) {
+          print(
+            '[FoodProvider.fetchsearchfoods] Search failed: ${fail.error.message} (${fail.error.throwMessage})',
+          );
+          showToast('Arama yapılırken bir hata oluştu: ${fail.error.message}');
+        },
+      );
+    } catch (e) {
+      print('[FoodProvider.fetchsearchfoods] Exception occurred: $e');
+      showToast('Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   void clearFoods() {

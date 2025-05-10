@@ -27,6 +27,25 @@ class _SummaryPageBodyState extends State<_SummaryPageBody> {
         .firstOrNull(
           (e) => e.date.toUtc().ext.compare.isSameDay(_currentDate.toUtc()),
         );
+
+    final totalCalories =
+        foods?.foodEntries.values
+            .expand((e) => e)
+            .fold<double>(
+              0,
+              (prev, food) => prev + (food.calories * food.amount),
+            ) ??
+        0;
+
+    final totalProtein =
+        foods?.foodEntries.values
+            .expand((e) => e)
+            .fold<double>(
+              0,
+              (prev, food) => prev + (food.protein * food.amount),
+            ) ??
+        0;
+
     return SingleChildScrollView(
       child: Padding(
         padding: AppValues.lg.ext.padding.horizontal,
@@ -57,46 +76,42 @@ class _SummaryPageBodyState extends State<_SummaryPageBody> {
                       final day = DateTime.now().subtract(
                         Duration(days: index),
                       );
+                      final dayFoods = context
+                          .watch<FoodProvider>()
+                          .sevenDaysFoods
+                          .ext
+                          .where
+                          .firstOrNull(
+                            (e) => e.date.toUtc().ext.compare.isSameDay(
+                              day.toUtc(),
+                            ),
+                          );
+
+                      final calories =
+                          dayFoods?.foodEntries.values
+                              .expand((e) => e)
+                              .fold<double>(
+                                0,
+                                (prev, food) =>
+                                    prev + (food.calories * food.amount),
+                              ) ??
+                          0;
+
                       return CustomLineChartData(
                         xLabel: DateFormat('E').format(day),
                         yLabel: (index + 1).toString(),
-                        y:
-                            context
-                                .watch<FoodProvider>()
-                                .sevenDaysFoods
-                                .ext
-                                .where
-                                .firstOrNull(
-                                  (e) => e.date.toUtc().ext.compare.isSameDay(
-                                    day.toUtc(),
-                                  ),
-                                )
-                                ?.foodEntries
-                                .values
-                                .fold(
-                                  0,
-                                  (a, b) =>
-                                      (a ?? 0) +
-                                      b.fold(
-                                        0,
-                                        (a, b) =>
-                                            a +
-                                            (b.servings.first.calories ?? 0),
-                                      ),
-                                ) ??
-                            0,
+                        y: calories,
                       );
                     }).reversed.toList(),
                 minY: 0,
                 maxY: context
                     .watch<FoodProvider>()
                     .sevenDaysFoods
-                    .expand(
-                      (e) => e.foodEntries.values.expand(
-                        (e) => e.map((e) => e.servings.first.calories ?? 0),
-                      ),
-                    )
-                    .fold(50, (a, b) => a + b),
+                    .expand((e) => e.foodEntries.values.expand((e) => e))
+                    .fold<double>(
+                      50,
+                      (prev, food) => prev + (food.calories * food.amount),
+                    ),
               ),
             ),
             AppValues.xl2.ext.sizedBox.vertical,

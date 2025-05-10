@@ -53,8 +53,7 @@ class _HomePageState extends State<HomePage> {
             .expand((e) => e)
             .fold<double>(
               0,
-              (previousValue, element) =>
-                  previousValue + (element.servings.first.calories ?? 0),
+              (previousValue, element) => previousValue + element.calories,
             ) ??
         0;
     final carb =
@@ -62,8 +61,7 @@ class _HomePageState extends State<HomePage> {
             .expand((e) => e)
             .fold<double>(
               0,
-              (previousValue, element) =>
-                  previousValue + (element.servings.first.carbohydrate ?? 0),
+              (previousValue, element) => previousValue + element.carbohydrates,
             ) ??
         0;
     final protein =
@@ -71,8 +69,7 @@ class _HomePageState extends State<HomePage> {
             .expand((e) => e)
             .fold<double>(
               0,
-              (previousValue, element) =>
-                  previousValue + (element.servings.first.protein ?? 0),
+              (previousValue, element) => previousValue + element.protein,
             ) ??
         0;
     final fat =
@@ -80,8 +77,7 @@ class _HomePageState extends State<HomePage> {
             .expand((e) => e)
             .fold<double>(
               0,
-              (previousValue, element) =>
-                  previousValue + (element.servings.first.fat ?? 0),
+              (previousValue, element) => previousValue + element.fat,
             ) ??
         0;
     return Scaffold(

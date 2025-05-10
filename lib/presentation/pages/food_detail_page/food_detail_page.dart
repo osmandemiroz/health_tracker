@@ -2,12 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:calory_tool/core/providers/favorite_provider.dart';
 import 'package:calory_tool/data/models/foods/food_model.dart';
-import 'package:calory_tool/presentation/pages/food_detail_page/allergens/food_detail_page_allergens.dart';
-import 'package:calory_tool/presentation/pages/food_detail_page/preferences/food_detail_page_preferences.dart';
-import 'package:calory_tool/presentation/pages/food_detail_page/serving/food_detail_page_serving.dart';
-import 'package:calory_tool/presentation/widgets/safearea/custom_safe_area.dart';
 import 'package:flutter/material.dart';
-import 'package:penta_core/penta_core.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -20,35 +15,32 @@ class FoodDetailPage extends StatefulWidget {
   State<FoodDetailPage> createState() => _FoodDetailPageState();
 }
 
-class _FoodDetailPageState extends State<FoodDetailPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class _FoodDetailPageState extends State<FoodDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomSafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: AppValues.md.ext.padding.horizontal,
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AppBar(
-                  title: Text(widget.foodModel.name ?? 'N/A'),
-                  actions: [
+                // App Bar
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () => context.router.popForced(),
+                      icon: const Icon(Icons.arrow_back_ios),
+                    ),
+                    Text(
+                      widget.foodModel.title,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     IconButton(
                       onPressed: () {
                         context.read<FavoritesProvider>().toogleFavoriteFood(
@@ -64,87 +56,151 @@ class _FoodDetailPageState extends State<FoodDetailPage>
                       ),
                     ),
                   ],
-                  centerTitle: true,
                 ),
-                Center(
-                  child: SizedBox(
-                    width: context.ext.screen.byOrientation(
-                      portrait: context.ext.screen.width * 0.5,
-                      landscape: context.ext.screen.height * 0.5,
-                    ),
-                    height: context.ext.screen.byOrientation(
-                      portrait: context.ext.screen.width * 0.5,
-                      landscape: context.ext.screen.height * 0.5,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.foodModel.imageUrl ?? '',
-                        errorWidget:
-                            (context, error, stackTrace) => const ColoredBox(
-                              color: Colors.grey,
-                              child: Icon(
-                                Icons.broken_image,
-                                size: 32,
-                                color: Colors.white,
-                              ),
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-                AppValues.md.ext.sizedBox.vertical,
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: AppValues.sm.value,
-                  children: List.generate(
-                    widget.foodModel.subCategories.length,
-                    (index) {
-                      final category = widget.foodModel.subCategories[index];
-                      return Chip(label: Text(category));
-                    },
-                  ),
-                ),
-                AppValues.md.ext.sizedBox.vertical,
-                if (widget.foodModel.brandName != null)
-                  Text(
-                    widget.foodModel.brandName!,
-                    textAlign: TextAlign.center,
-                    style: context.ext.theme.textTheme.bodyLarge,
-                  ),
-                AppValues.md.ext.sizedBox.vertical,
 
-                // TabBar
-                TabBar(
-                  controller: _tabController,
-                  onTap: (index) {
-                    setState(() {});
-                  },
-                  tabs: const [
-                    Tab(text: 'Serving'),
-                    Tab(text: 'Allergens'),
-                    Tab(text: 'Preferences'),
-                  ],
+                const SizedBox(height: 16),
+
+                // Yemek Resmi
+                if (widget.foodModel.imageUrl != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.foodModel.imageUrl!,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorWidget:
+                          (context, error, stackTrace) => Container(
+                            height: 200,
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.restaurant,
+                              size: 64,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                    ),
+                  ),
+
+                const SizedBox(height: 24),
+
+                // Kategori
+                Text(
+                  'Kategori: ${widget.foodModel.category}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                Builder(
-                  builder: (context) {
-                    return _tabController.index == 0
-                        ? FoodDetailPageServing(
-                          foodServingModel: widget.foodModel.servings,
-                        )
-                        : _tabController.index == 1
-                        ? FoodDetailPageAllergens(
-                          foodAllergens: widget.foodModel.allergens,
-                        )
-                        : FoodDetailPagePreferences(
-                          foodPreferences: widget.foodModel.preferences,
-                        );
-                  },
+
+                const SizedBox(height: 16),
+
+                // Besin Değerleri
+                const Text(
+                  'Besin Değerleri',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 8),
+                _buildNutritionRow(
+                  'Kalori',
+                  '${widget.foodModel.calories.toInt()} kcal',
+                ),
+                _buildNutritionRow(
+                  'Protein',
+                  '${widget.foodModel.protein.toStringAsFixed(1)} g',
+                ),
+                _buildNutritionRow(
+                  'Karbonhidrat',
+                  '${widget.foodModel.carbohydrates.toStringAsFixed(1)} g',
+                ),
+                _buildNutritionRow(
+                  'Yağ',
+                  '${widget.foodModel.fat.toStringAsFixed(1)} g',
+                ),
+                if (widget.foodModel.dietaryFiber != null)
+                  _buildNutritionRow(
+                    'Lif',
+                    '${widget.foodModel.dietaryFiber!.toStringAsFixed(1)} g',
+                  ),
+
+                const SizedBox(height: 24),
+
+                // Hazırlama Bilgileri
+                if (widget.foodModel.prepTime != null ||
+                    widget.foodModel.cookTime != null ||
+                    widget.foodModel.totalTime != null) ...[
+                  const Text(
+                    'Hazırlama Bilgileri',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  if (widget.foodModel.prepTime != null)
+                    _buildTimeRow(
+                      'Hazırlama Süresi',
+                      '${widget.foodModel.prepTime} dk',
+                    ),
+                  if (widget.foodModel.cookTime != null)
+                    _buildTimeRow(
+                      'Pişirme Süresi',
+                      '${widget.foodModel.cookTime} dk',
+                    ),
+                  if (widget.foodModel.totalTime != null)
+                    _buildTimeRow(
+                      'Toplam Süre',
+                      '${widget.foodModel.totalTime} dk',
+                    ),
+                ],
+
+                if (widget.foodModel.servingSize != null) ...[
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Porsiyon Bilgisi',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.foodModel.servingSize!,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildNutritionRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 16)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          const Icon(Icons.timer_outlined, size: 20),
+          const SizedBox(width: 8),
+          Text(label, style: const TextStyle(fontSize: 16)),
+          const Spacer(),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+        ],
       ),
     );
   }

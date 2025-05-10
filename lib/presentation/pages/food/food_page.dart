@@ -44,34 +44,78 @@ class _FoodPageState extends State<FoodPage> {
             .where((e) => e.imageUrl != null)
             .toList();
 
+    final isLoading = context.watch<FoodProvider>().isLoading;
+
     return Scaffold(
-      backgroundColor: Colors.grey[200], // Sayfa arka planını hafif gri yaptık
+      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            // Search Bar Container with shadow
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(16),
               child: CustomTextField(
                 controller: _searchController,
-                hintText: 'Search for recipes...',
-                prefixIcon: const Icon(Icons.search),
+                hintText: 'Yemek ara...',
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
                 onChanged: _fetchSuggestions,
               ),
             ),
+
+            // Loading Indicator or Results
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 10,
-                ),
-                itemCount: items?.length ?? 0,
-                separatorBuilder: (context, index) => const SizedBox(height: 8),
-                itemBuilder: (context, index) {
-                  final food = items![index];
-                  return FoodCard(foodModel: food);
-                },
-              ),
+              child:
+                  isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : items == null || items.isEmpty
+                      ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search_off_rounded,
+                              size: 64,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              _searchText.isEmpty
+                                  ? 'Yemek aramak için yukarıdaki arama çubuğunu kullanın'
+                                  : 'Aradığınız yemek bulunamadı',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[600],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      )
+                      : ListView.separated(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        itemCount: items.length,
+                        separatorBuilder:
+                            (context, index) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final food = items[index];
+                          return FoodCard(foodModel: food);
+                        },
+                      ),
             ),
           ],
         ),

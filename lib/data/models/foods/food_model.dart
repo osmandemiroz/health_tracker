@@ -8,95 +8,98 @@ part 'food_model.g.dart';
 @HiveType(typeId: 0)
 class FoodModel extends HiveObject {
   FoodModel({
-    required this.subCategories,
-    required this.allergens,
-    required this.preferences,
-    required this.servings,
-    this.id,
-    this.name,
-    this.brandName,
-    this.type,
-    this.url,
+    required this.id,
+    required this.title,
+    required this.calories,
+    required this.protein,
+    required this.carbohydrates,
+    required this.fat,
+    required this.category,
+    this.prepTime,
+    this.cookTime,
+    this.totalTime,
+    this.servingSize,
     this.imageUrl,
+    this.dietaryFiber,
     this.amount = 0,
   });
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
-    final subCategories = json['sub_categories'] as List? ?? [];
-    final allergens = json['allergens'] as List? ?? [];
-    final preferences = json['preferences'] as List? ?? [];
-    final servings = json['servings'] as List? ?? [];
-
     return FoodModel(
-      id: json['id'] as String?,
-      name: json['name'] as String?,
-      brandName: json['brand_name'] as String?,
-      type: json['type'] as String?,
-      subCategories: subCategories.map((e) => e as String).toList(),
-      url: json['url'] as String?,
-      allergens:
-          allergens
-              .map((e) => FoodAllergenModel.fromJson(e as Map<String, dynamic>))
-              .toList(),
-      preferences:
-          preferences
-              .map(
-                (e) => FoodPreferenceModel.fromJson(e as Map<String, dynamic>),
-              )
-              .toList(),
-      servings:
-          servings
-              .map((e) => FoodServingModel.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      id: json['RID']?.toString() ?? '',
+      title: json['title'] as String? ?? '',
+      calories: (json['calories'] as num?)?.toDouble() ?? 0,
+      protein: (json['protein_g'] as num?)?.toDouble() ?? 0,
+      carbohydrates: (json['carbohydrates_g'] as num?)?.toDouble() ?? 0,
+      fat: (json['fat_g'] as num?)?.toDouble() ?? 0,
+      category: json['category'] as String? ?? '',
+      prepTime: json['prep_time'] as int?,
+      cookTime: json['cook_time'] as int?,
+      totalTime: json['total_time'] as int?,
+      servingSize: json['serving_size'] as String?,
       imageUrl: json['image_url'] as String?,
+      dietaryFiber: (json['dietary_fiber_g'] as num?)?.toDouble(),
+      amount: 0,
     );
   }
 
   @HiveField(0)
-  final String? id;
+  final String id;
 
   @HiveField(1)
-  final String? name;
+  final String title;
 
   @HiveField(2)
-  final String? brandName;
+  final double calories;
 
   @HiveField(3)
-  final String? type;
+  final double protein;
 
   @HiveField(4)
-  final List<String> subCategories;
+  final double carbohydrates;
 
   @HiveField(5)
-  final String? url;
+  final double fat;
 
   @HiveField(6)
-  final List<FoodAllergenModel> allergens;
+  final String category;
 
   @HiveField(7)
-  final List<FoodPreferenceModel> preferences;
+  final int? prepTime;
 
   @HiveField(8)
-  final List<FoodServingModel> servings;
+  final int? cookTime;
 
   @HiveField(9)
-  final String? imageUrl;
+  final int? totalTime;
 
   @HiveField(10)
+  final String? servingSize;
+
+  @HiveField(11)
+  final String? imageUrl;
+
+  @HiveField(12)
+  final double? dietaryFiber;
+
+  @HiveField(13)
   int amount;
 
   FoodModel clone() {
     return FoodModel(
       id: id,
-      name: name,
-      brandName: brandName,
-      type: type,
-      subCategories: List<String>.from(subCategories),
-      url: url,
-      allergens: List<FoodAllergenModel>.from(allergens),
-      preferences: List<FoodPreferenceModel>.from(preferences),
-      servings: List<FoodServingModel>.from(servings),
+      title: title,
+      calories: calories,
+      protein: protein,
+      carbohydrates: carbohydrates,
+      fat: fat,
+      category: category,
+      prepTime: prepTime,
+      cookTime: cookTime,
+      totalTime: totalTime,
+      servingSize: servingSize,
       imageUrl: imageUrl,
+      dietaryFiber: dietaryFiber,
       amount: amount,
     );
   }

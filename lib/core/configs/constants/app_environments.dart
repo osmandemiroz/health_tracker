@@ -13,4 +13,7 @@ final class AppEnvironments {
   // String get fatsecretClientSecret =>
   //     dotenv.env['FATSECRET_CLIENT_SECRET'] ?? '';
   String get serverApiUrl => dotenv.env['SERVER_API_URL'] ?? '';
+
+  static const String apiUrl =
+      'http://localhost:3000'; // Sunucu URL'nizi buraya ekleyin
 }

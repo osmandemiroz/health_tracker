@@ -30,7 +30,7 @@ class _FoodDetailPageServingState extends State<FoodDetailPageServing> {
               Expanded(
                 child: Text(
                   selectedServingType.description ?? 'N/A',
-                  style:TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.black,
                     fontStyle: FontStyle.normal,
@@ -175,12 +175,13 @@ class _FoodDetailPageServingState extends State<FoodDetailPageServing> {
         vertical: VisualDensity.minimumDensity,
       ),
       title: Text(
-        title, style: TextStyle(
-        fontSize: 18,
-        color: Colors.grey,
-        fontStyle: FontStyle.normal,
-        fontWeight: FontWeight.w600,
-      ),
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          color: Colors.grey,
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       trailing: Text(
         '$value $unit',

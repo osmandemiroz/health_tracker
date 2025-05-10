@@ -1,3 +1,4 @@
+import 'package:calory_tool/core/utils/logger.dart';
 import 'package:calory_tool/data/models/foods/food_category_model.dart';
 import 'package:calory_tool/data/models/foods/food_image_recognition_model.dart';
 import 'package:calory_tool/data/models/foods/food_search_model.dart';
@@ -18,30 +19,64 @@ final class FatsecretRemoteDatasource {
     FatsecretApiSearchFoodParams params,
   ) async {
     try {
+      Logger.log(
+        'Making API request with params: ${params.toMap()}',
+        tag: 'FatsecretRemoteDataSource',
+      );
+
       final res = await _fatsecretDio.get<Map<String, dynamic>>(
         '/foods/search',
         queryParameters: params.toMap(),
       );
 
+      Logger.log('API response: ${res.data}', tag: 'FatsecretRemoteDataSource');
+
       if (res.data?['data'] == null) {
+        Logger.log(
+          'No data found in response',
+          tag: 'FatsecretRemoteDataSource',
+        );
         return const ResponseModelFail(
           error: ErrorModel(
-            message: 'No data found',
+            message: 'Sonuç bulunamadı',
             throwMessage:
                 'fatsecret_remote_datasource/searchFood/null: No data found',
           ),
         );
       }
 
-      return ResponseModelSuccess(
-        data: FoodSearchModel.fromJson(
-          res.data!['data'] as Map<String, dynamic>,
+      final searchModel = FoodSearchModel.fromJson(
+        res.data!['data'] as Map<String, dynamic>,
+      );
+      Logger.log(
+        'Successfully parsed response with ${searchModel.foods.length} items',
+        tag: 'FatsecretRemoteDataSource',
+      );
+
+      return ResponseModelSuccess(data: searchModel);
+    } on DioException catch (e) {
+      Logger.error(
+        'DioException',
+        tag: 'FatsecretRemoteDataSource',
+        error: e,
+        stackTrace: e.stackTrace,
+      );
+      return ResponseModelFail(
+        error: ErrorModel(
+          message: 'API bağlantısında hata oluştu',
+          throwMessage:
+              'fatsecret_remote_datasource/searchFood/dio: ${e.message}',
         ),
       );
-    } on Exception {
+    } on Exception catch (e) {
+      Logger.error(
+        'Exception occurred',
+        tag: 'FatsecretRemoteDataSource',
+        error: e,
+      );
       return const ResponseModelFail(
         error: ErrorModel(
-          message: 'Failed to search food',
+          message: 'Yemek arama işlemi başarısız oldu',
           throwMessage:
               'fatsecret_remote_datasource/searchFood/catch: Failed to search food',
         ),

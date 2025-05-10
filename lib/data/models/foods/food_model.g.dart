@@ -17,45 +17,54 @@ class FoodModelAdapter extends TypeAdapter<FoodModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FoodModel(
-      subCategories: (fields[4] as List).cast<String>(),
-      allergens: (fields[6] as List).cast<FoodAllergenModel>(),
-      preferences: (fields[7] as List).cast<FoodPreferenceModel>(),
-      servings: (fields[8] as List).cast<FoodServingModel>(),
-      id: fields[0] as String?,
-      name: fields[1] as String?,
-      brandName: fields[2] as String?,
-      type: fields[3] as String?,
-      url: fields[5] as String?,
-      imageUrl: fields[9] as String?,
-      amount: fields[10] as int,
+      id: fields[0] as String,
+      title: fields[1] as String,
+      calories: fields[2] as double,
+      protein: fields[3] as double,
+      carbohydrates: fields[4] as double,
+      fat: fields[5] as double,
+      category: fields[6] as String,
+      prepTime: fields[7] as int?,
+      cookTime: fields[8] as int?,
+      totalTime: fields[9] as int?,
+      servingSize: fields[10] as String?,
+      imageUrl: fields[11] as String?,
+      dietaryFiber: fields[12] as double?,
+      amount: fields[13] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, FoodModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.brandName)
+      ..write(obj.calories)
       ..writeByte(3)
-      ..write(obj.type)
+      ..write(obj.protein)
       ..writeByte(4)
-      ..write(obj.subCategories)
+      ..write(obj.carbohydrates)
       ..writeByte(5)
-      ..write(obj.url)
+      ..write(obj.fat)
       ..writeByte(6)
-      ..write(obj.allergens)
+      ..write(obj.category)
       ..writeByte(7)
-      ..write(obj.preferences)
+      ..write(obj.prepTime)
       ..writeByte(8)
-      ..write(obj.servings)
+      ..write(obj.cookTime)
       ..writeByte(9)
-      ..write(obj.imageUrl)
+      ..write(obj.totalTime)
       ..writeByte(10)
+      ..write(obj.servingSize)
+      ..writeByte(11)
+      ..write(obj.imageUrl)
+      ..writeByte(12)
+      ..write(obj.dietaryFiber)
+      ..writeByte(13)
       ..write(obj.amount);
   }
 
